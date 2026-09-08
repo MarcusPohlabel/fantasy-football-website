@@ -1,6 +1,7 @@
 import { getPlayers } from "@/lib/data";
 import { summarizeByTeam } from "@/lib/aggregate";
 import { formatNumber } from "@/lib/format";
+import { countNflTeams } from "@/lib/nfl-teams";
 import { TeamBarChart } from "@/components/charts/team-bar-chart";
 import { TeamExplorer } from "@/components/team-explorer";
 import { StatCard } from "@/components/stat-card";
@@ -17,6 +18,7 @@ export default async function TeamsPage() {
   const players = await getPlayers();
   const teamSummaries = summarizeByTeam(players);
   const teams = teamSummaries.map((t) => t.team);
+  const nflTeamCount = countNflTeams(teams);
 
   const topTeam = [...teamSummaries].sort(
     (a, b) => b.totalFantasyPoints - a.totalFantasyPoints
@@ -40,7 +42,7 @@ export default async function TeamsPage() {
       </div>
 
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-        <StatCard label="Teams Tracked" value={formatNumber(teams.length)} icon={Users2} />
+        <StatCard label="Teams Tracked" value={formatNumber(nflTeamCount)} icon={Users2} />
         <StatCard
           label="Top Scoring Team"
           value={topTeam?.team ?? "—"}

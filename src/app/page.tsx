@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getDataSource, getPlayers } from "@/lib/data";
 import { summarizeByPosition } from "@/lib/aggregate";
 import { formatNumber } from "@/lib/format";
+import { countNflTeams } from "@/lib/nfl-teams";
 import { StatCard } from "@/components/stat-card";
 import { TopPlayersPreview } from "@/components/top-players-preview";
 import { TopPlayersChart } from "@/components/charts/top-players-chart";
@@ -25,7 +26,7 @@ export default async function HomePage() {
   const [players, dataSource] = await Promise.all([getPlayers(), getDataSource()]);
   const positionSummaries = summarizeByPosition(players);
 
-  const totalTeams = new Set(players.map((p) => p.team)).size;
+  const totalTeams = countNflTeams(players.map((p) => p.team));
   const totalFantasyPoints = players.reduce((acc, p) => acc + p.fantasyPointsSafe, 0);
   const playersWithGames = players.filter((p) => p.gamesSafe > 0);
   const avgPpg = playersWithGames.length
